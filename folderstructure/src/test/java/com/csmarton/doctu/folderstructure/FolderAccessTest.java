@@ -21,7 +21,7 @@ public class FolderAccessTest {
 	}
 
 	@Test
-	public void mustGetANullTreeItemWhenHavingANonReadAbleAndWritableRoot()
+	public void shouldGetRootTreeItemWhenHavingAReadAbleRootWithWritableChildren()
 			throws FileNotFoundException
 	{
 		folderAccess.buildFromInputFile(getInputFile("folderaccess/input1.txt"));
