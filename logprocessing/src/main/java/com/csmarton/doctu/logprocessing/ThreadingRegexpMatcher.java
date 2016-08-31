@@ -160,7 +160,6 @@ public class ThreadingRegexpMatcher {
 	}
 
 	private class LogProcessorExecutor {
-
 		private ExecutorService executor;
 
 		public LogProcessorExecutor()
@@ -169,11 +168,11 @@ public class ThreadingRegexpMatcher {
 			this.executor = Executors.newFixedThreadPool(nCores);
 		}
 
-		private void processLogFile(File listOfFile) throws IOException, InterruptedException
+		private void processLogFile(File file) throws IOException, InterruptedException
 		{
-			content = Resources.toString(listOfFile.toURI().toURL(), Charsets.UTF_8);
+			content = Resources.toString(file.toURI().toURL(), Charsets.UTF_8);
 
-			System.out.println(String.format("Processing: %s", listOfFile.getName()));
+			System.out.println(String.format("Processing: %s", file.getName()));
 
 			List<Future<Integer>> futures = Lists.newArrayList();
 
