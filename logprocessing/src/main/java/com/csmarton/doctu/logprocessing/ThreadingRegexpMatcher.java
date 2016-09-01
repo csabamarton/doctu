@@ -95,17 +95,17 @@ public class ThreadingRegexpMatcher {
 		@Override
 		public Integer call() throws InterruptedException, IOException
 		{
-			Pattern regex;
+			Pattern regexp;
 			Map<String, Pattern> regExpPatterns = regExpConfiguration.getRegExpPatterns();
 
 			if (!regExpPatterns.containsKey(fileName)) {
-				regex = Pattern.compile(pattern, Pattern.MULTILINE);
-				regExpPatterns.put(fileName, regex);
+				regexp = Pattern.compile(pattern, Pattern.MULTILINE);
+				regExpPatterns.put(fileName, regexp);
 			} else {
-				regex = regExpPatterns.get(fileName);
+				regexp = regExpPatterns.get(fileName);
 			}
 
-			Matcher matcher = regex.matcher(content);
+			Matcher matcher = regexp.matcher(content);
 
 			int count = 0;
 
@@ -142,7 +142,7 @@ public class ThreadingRegexpMatcher {
 		File[] listOfFiles = folder.listFiles();
 
 		Arrays.stream(listOfFiles).forEach(file -> {
-			if (file.getName().indexOf(TXT_SUFFIX) > -1) {
+			if (file.isFile()) {
 				try {
 					logProcessorExecutor.processLogFile(file);
 				} catch (IOException e) {
