@@ -1,17 +1,19 @@
 package com.csmarton.doctu.folderstructure;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class FolderAccess {
-	private List<TreeItem> allItems;
-	protected List<String> readables;
-	protected List<String> writables;
+	private Set<TreeItem> allItems;
+	protected Set<String> readables;
+	protected Set<String> writables;
 
 	private TreeItem rootNode;
 	private TreeBuilder treeBuilder;
@@ -43,10 +45,10 @@ public class FolderAccess {
 		{
 			Scanner in = new Scanner(file);
 
-			readables = Lists.newArrayList(in.nextLine().split(" "));
-			writables = Lists.newArrayList(in.nextLine().split(" "));
+			readables = Sets.newHashSet(in.nextLine().split(" "));
+			writables = Sets.newHashSet(in.nextLine().split(" "));
 
-			allItems = Lists.newArrayList();
+			allItems = Sets.newHashSet();
 
 			while (in.hasNextLine()) {
 				String[] edges = in.nextLine().split(" ");
