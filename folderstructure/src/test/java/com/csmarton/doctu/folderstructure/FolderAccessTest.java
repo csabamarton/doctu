@@ -25,16 +25,12 @@ public class FolderAccessTest {
 			throws FileNotFoundException
 	{
 		folderAccess.getTreeBuilder().buildFromInputFile(getInputFile("folderaccess/input1.txt"));
-
-		FolderAccess.TreeItem rootNode = folderAccess.rootNode;
 		folderAccess.getTreeCutter().cutNonImportantParts();
 
 		folderAccessForResult.getTreeBuilder().buildFromInputFile(getInputFile("folderaccess/result1.txt"));
 
-		FolderAccess.TreeItem expectedRootNode = folderAccessForResult.rootNode;
-
-		int expected = expectedRootNode.hashCode();
-		int actual = rootNode.hashCode();
+		int expected = folderAccessForResult.getRootNode().hashCode();
+		int actual = folderAccess.getRootNode().hashCode();
 
 		assertEquals(expected, actual);
 	}

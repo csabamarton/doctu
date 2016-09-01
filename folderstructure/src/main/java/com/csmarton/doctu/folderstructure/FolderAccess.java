@@ -13,7 +13,7 @@ public class FolderAccess {
 	protected List<String> readables;
 	protected List<String> writables;
 
-	protected TreeItem rootNode;
+	private TreeItem rootNode;
 	private TreeBuilder treeBuilder;
 	private TreeCutter treeCutter;
 
@@ -31,6 +31,11 @@ public class FolderAccess {
 	protected TreeCutter getTreeCutter()
 	{
 		return treeCutter;
+	}
+
+	protected TreeItem getRootNode()
+	{
+		return rootNode;
 	}
 
 	protected class TreeBuilder {
@@ -130,7 +135,7 @@ public class FolderAccess {
 		return null;
 	}
 
-	public class TreeItem {
+	protected class TreeItem {
 		private String name;
 		private List<TreeItem> children;
 
