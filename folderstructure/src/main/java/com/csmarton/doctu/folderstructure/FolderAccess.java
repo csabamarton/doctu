@@ -10,92 +10,113 @@ import java.util.Scanner;
 
 public class FolderAccess {
 	private List<TreeItem> allItems;
-	public List<String> readables;
-	public List<String> writables;
+	protected List<String> readables;
+	protected List<String> writables;
 
-	public TreeItem rootNode;
+	protected TreeItem rootNode;
+	private TreeBuilder treeBuilder;
+	private TreeCutter treeCutter;
 
-	protected void buildFromInputFile(File file) throws FileNotFoundException
+	public FolderAccess()
 	{
-		Scanner in = new Scanner(file);
+		this.treeBuilder = new TreeBuilder();
+		this.treeCutter = new TreeCutter();
+	}
 
-		readables = Lists.newArrayList(in.nextLine().split(" "));
-		writables = Lists.newArrayList(in.nextLine().split(" "));
+	protected TreeBuilder getTreeBuilder()
+	{
+		return treeBuilder;
+	}
 
-		allItems = Lists.newArrayList();
+	protected TreeCutter getTreeCutter()
+	{
+		return treeCutter;
+	}
 
-		while (in.hasNextLine()) {
-			String[] edges = in.nextLine().split(" ");
+	protected class TreeBuilder {
+		protected void buildFromInputFile(File file) throws FileNotFoundException
+		{
+			Scanner in = new Scanner(file);
 
-			String parentName = edges[0];
+			readables = Lists.newArrayList(in.nextLine().split(" "));
+			writables = Lists.newArrayList(in.nextLine().split(" "));
 
-			TreeItem item = getItem(parentName);
-			if (item == null) {
-				item = new TreeItem(parentName);
-				allItems.add(item);
-			}
+			allItems = Lists.newArrayList();
 
-			for (int j = 1; j < edges.length; j++) {
-				String childName = edges[j];
-				TreeItem child = getItem(childName);
-				if (child == null) {
-					child = new TreeItem(childName);
-					allItems.add(child);
+			while (in.hasNextLine()) {
+				String[] edges = in.nextLine().split(" ");
+
+				String parentName = edges[0];
+
+				TreeItem item = getItem(parentName);
+				if (item == null) {
+					item = new TreeItem(parentName);
+					allItems.add(item);
 				}
 
-				item.addChild(child);
+				for (int edgeCounter = 1; edgeCounter < edges.length; edgeCounter++) {
+					String childName = edges[edgeCounter];
+					TreeItem child = getItem(childName);
+					if (child == null) {
+						child = new TreeItem(childName);
+						allItems.add(child);
+					}
+
+					item.addChild(child);
+				}
+			}
+
+			rootNode = getItem("1");
+		}
+	}
+
+	protected class TreeCutter {
+		protected void cutNonImportantParts()
+		{
+			if (!findWritableChildren(rootNode) && !writables.contains(rootNode.getName())) {
+				rootNode = null;
 			}
 		}
 
-		rootNode = getItem("1");
-	}
+		protected boolean findWritableChildren(TreeItem item)
+		{
+			String name = item.getName();
 
-	protected void cutNonImportantParts()
-	{
-		if (!findWritableChildren(rootNode) && !writables.contains(rootNode.getName())) {
-			rootNode = null;
-		}
-	}
+			boolean mustKeep = false;
 
-	protected boolean findWritableChildren(TreeItem item)
-	{
-		String name = item.getName();
+			boolean readable = readables.contains(name);
+			boolean writable = writables.contains(name);
 
-		boolean mustKeep = false;
-
-		boolean readable = readables.contains(name);
-		boolean writable = writables.contains(name);
-
-		if (!(readable || writable)) {
-			return false;
-		} else if (item.getChildren() == null) {
-			return writable;
-		} else if (item.getChildren() != null && (readable || writable)) {
-
-			if (writable) {
-				mustKeep = true;
-			}
-
-			List<TreeItem> children = item.getChildren();
-
-			boolean hasWritableUnderIt;
-
-			for (Iterator<TreeItem> iterator = children.iterator(); iterator.hasNext();) {
-				TreeItem child = iterator.next();
-
-				hasWritableUnderIt = findWritableChildren(child);
-
-				if (!hasWritableUnderIt) {
-					iterator.remove();
-				}
-
-				if (!mustKeep && hasWritableUnderIt) {
+			if (!(readable || writable)) {
+				return false;
+			} else if (item.getChildren() == null) {
+				return writable;
+			} else if (item.getChildren() != null && (readable || writable)) {
+				if (writable) {
 					mustKeep = true;
 				}
-			}
-		}
 
-		return mustKeep;
+				List<TreeItem> children = item.getChildren();
+
+				boolean hasWritableUnderIt;
+
+				for (Iterator<TreeItem> iterator = children.iterator(); iterator.hasNext();) {
+					TreeItem child = iterator.next();
+
+					hasWritableUnderIt = findWritableChildren(child);
+
+					if (!hasWritableUnderIt) {
+						iterator.remove();
+					}
+
+					if (!mustKeep && hasWritableUnderIt) {
+						mustKeep = true;
+					}
+				}
+			}
+
+			return mustKeep;
+		}
 	}
 
 	private TreeItem getItem(String node1)
@@ -109,7 +130,7 @@ public class FolderAccess {
 		return null;
 	}
 
-	public static class TreeItem {
+	public class TreeItem {
 		private String name;
 		private List<TreeItem> children;
 

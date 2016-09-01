@@ -24,12 +24,12 @@ public class FolderAccessTest {
 	public void shouldGetRootTreeItemWhenHavingAReadAbleRootWithWritableChildren()
 			throws FileNotFoundException
 	{
-		folderAccess.buildFromInputFile(getInputFile("folderaccess/input1.txt"));
+		folderAccess.getTreeBuilder().buildFromInputFile(getInputFile("folderaccess/input1.txt"));
 
 		FolderAccess.TreeItem rootNode = folderAccess.rootNode;
-		folderAccess.cutNonImportantParts();
+		folderAccess.getTreeCutter().cutNonImportantParts();
 
-		folderAccessForResult.buildFromInputFile(getInputFile("folderaccess/result1.txt"));
+		folderAccessForResult.getTreeBuilder().buildFromInputFile(getInputFile("folderaccess/result1.txt"));
 
 		FolderAccess.TreeItem expectedRootNode = folderAccessForResult.rootNode;
 
